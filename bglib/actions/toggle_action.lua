@@ -40,10 +40,10 @@ function ToggleAction:register(actionsPage)
   self._baseAction = actionsPage:newAction()
 
   -- Register required functions
-  self._baseAction:setOnToggle(function(isToggled) self:toggle(isToggled) end)
+  self._baseAction:setOnToggle(function(isActive) self:onToggle(isActive) end)
 end
 
-function ToggleAction:toggle(isToggled)
+function ToggleAction:onToggle(isActive)
   --[[
   Function that's called when the action
   gets toggled (i.e. switches from toggled
