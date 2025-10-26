@@ -43,13 +43,13 @@ function Class:subclass(object)
   return subclass
 end
 
-function Class:super(method, ...)
+function Class:super(method)
   --[[
-  Calls a method on the instance's
-  parent class. If there is no parent
-  class, an error is raised.
+  Returns a function that calls
+  the given method from the class's
+  parent with the current instance.
   --]]
-  local args = {...}
+
   local parent = self._parent
 
   for level=1,self._superLevel do
@@ -60,12 +60,16 @@ function Class:super(method, ...)
     error("Attempted to call super on a class with no parent")
   end
 
-  -- actually call the appropriate method
-  self._superLevel = self._superLevel + 1
-  local return_value = parent[method](self, table.unpack(args))
-  self._superLevel = self._superLevel - 1
+  return function(...)
+    local args = {...}
 
-  return return_value
+    -- actually call the appropriate method
+    self._superLevel = self._superLevel + 1
+    local return_value = parent[method](self, table.unpack(args))
+    self._superLevel = self._superLevel - 1
+
+    return return_value
+  end
 end
 
 
