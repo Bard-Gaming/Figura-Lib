@@ -6,30 +6,10 @@ Implementation for ToggleAction class
 
 --]]
 
+local Class = require("../core.class")
 
-local ToggleAction = { _baseAction = nil }
+local ToggleAction = Class:new({ _baseAction = nil })
 
-
-function ToggleAction:new(object)
-  object = object or {}
-
-  setmetatable(object, self)
-  self.__index = self
-
-  return object
-end
-
-function ToggleAction:subclass(object)
-  --[[
-  Similar to ToggleAction:new(), but
-  to be used when instanciating subclasses.
-  --]]
-  local subclass = self:new(object)
-  
-  subclass.parent = self
-
-  return subclass
-end
 
 function ToggleAction:register(actionsPage)
   --[[
