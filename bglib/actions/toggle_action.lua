@@ -61,6 +61,18 @@ function ToggleAction:isToggled()
   return self._baseAction:isToggled()
 end
 
+function ToggleAction:setToggled(newState)
+  --[[
+  Sets the toggle state of the action
+  to the specified value
+  --]]
+  self:_requireRegister()
+
+  self._baseAction:setToggled(newState)
+  self:onToggle(newState)
+  return self
+end
+
 function ToggleAction:tick()
   --[[
   Action tick function.
