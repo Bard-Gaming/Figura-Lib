@@ -49,6 +49,7 @@ function Class:super(method, ...)
   parent class. If there is no parent
   class, an error is raised.
   --]]
+  local args = {...}
   local parent = self._parent
 
   for level=1,self._superLevel do
@@ -61,7 +62,7 @@ function Class:super(method, ...)
 
   -- actually call the appropriate method
   self._superLevel = self._superLevel + 1
-  local return_value = print(parent[method])
+  local return_value = parent[method](self, table.unpack(args))
   self._superLevel = self._superLevel - 1
 
   return return_value
