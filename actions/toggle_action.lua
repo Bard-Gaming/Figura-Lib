@@ -7,8 +7,10 @@ Implementation for ToggleAction class
 --]]
 
 local Class = require("../core.class")
+local random = require("../core.random")
 
-local ToggleAction = Class:new({ _baseAction = nil })
+
+local ToggleAction = Class:new({ _baseAction = nil, _actionPage = nil, _updateHandle = nil })
 
 
 function ToggleAction:register(actionsPage)
@@ -17,10 +19,39 @@ function ToggleAction:register(actionsPage)
   gets toggled (i.e. switches from toggled
   to untoggled or vice-versa).
   --]]
+  -- update state
+  self._actionPage = actionsPage
   self._baseAction = actionsPage:newAction()
+  self._updateHandle = random.uuid()
 
-  -- Register required functions
+  -- register action functions
   self._baseAction:setOnToggle(function(isActive) self:onToggle(isActive) end)
+
+  -- register tick
+  events.TICK:register(function() self:tick() end, self._updateHandle)
+end
+
+function ToggleAction:unregister()
+  --[[
+  Unregisters the action.
+  Does nothing if the action isn't
+  registered.
+  --]]
+  -- remove action from action wheel
+  for index, action in ipairs(self._actionPage:getActions()) do
+    if action == self._baseAction then
+      self._actionPage:setAction(index, nil)
+      break
+    end
+  end
+
+  -- unregister tick event
+  events.TICK:remove(self._updateHandle)
+  
+  -- reset state
+  self._updateHandle = nil
+  self._baseAction = nil
+  self._actionPage = nil
 end
 
 function ToggleAction:onToggle(isActive)
@@ -82,5 +113,6 @@ function ToggleAction:_requireRegister()
 
   error("Attempted to use a toggle action without registering it prior.", 2)
 end
+
 
 return ToggleAction
