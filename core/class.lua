@@ -7,12 +7,16 @@ BGLib's Classes
 
 --]]
 
+
 local Class = { _superLevel = 0 }
 
 
 function Class:new(object)
   --[[
   Creates a new class.
+  If this is called on an existing
+  class, this creates a new instance
+  instead.
   --]]
   object = object or {}
 
